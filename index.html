@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Épargne Journalière</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.container {
+    max-width: 400px;
+    margin: auto;
+}
+
+.card {
+    background: #1e293b;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+input, button {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    border: none;
+}
+
+button {
+    background: #22c55e;
+    color: white;
+    cursor: pointer;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>💰 Épargne Journalière</h1>
+
+<div class="card">
+    <h3>Total: <span id="total">0</span> DH</h3>
+</div>
+
+<div class="card">
+    <input type="number" id="amount" placeholder="Montant du jour">
+    <button onclick="addSaving()">Ajouter</button>
+</div>
+
+<div class="card">
+    <h3>Historique</h3>
+    <ul id="list"></ul>
+</div>
+
+</div>
+
+<script>
+let savings = JSON.parse(localStorage.getItem("savings")) || [];
+
+function save() {
+    localStorage.setItem("savings", JSON.stringify(savings));
+}
+
+function addSaving() {
+    let amount = parseFloat(document.getElementById("amount").value);
+
+    if (!amount) return alert("Entre un montant");
+
+    let date = new Date().toLocaleDateString();
+
+    savings.push({ amount, date });
+
+    save();
+    updateUI();
+}
+
+function updateUI() {
+    let total = 0;
+    let list = document.getElementById("list");
+    list.innerHTML = "";
+
+    savings.forEach(s => {
+        total += s.amount;
+
+        let li = document.createElement("li");
+        li.textContent = `${s.date} - ${s.amount} DH`;
+        list.appendChild(li);
+    });
+
+    document.getElementById("total").textContent = total;
+}
+
+updateUI();
+</script>
+
+</body>
+</html>
